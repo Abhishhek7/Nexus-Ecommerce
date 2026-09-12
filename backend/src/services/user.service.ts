@@ -1,1 +1,4 @@
-import {prisma} from '../config/prisma';import {AppError} from '../utils/http';export async function profile(id:number){const u=await prisma.user.findUnique({where:{id},select:{id:true,name:true,email:true,role:true,status:true,createdAt:true,vendor:true}});if(!u)throw new AppError(404,'User not found','NOT_FOUND');return u}export async function update(id:number,input:any){return prisma.user.update({where:{id},data:{name:input.name}})}
+import {prisma} from '../config/prisma';
+import {AppError} from '../utils/http';
+export async function profile(id:number){const u=await prisma.user.findUnique({where:{id},select:{id:true,name:true,email:true,role:true,status:true,createdAt:true,vendor:true}});if(!u)throw new AppError(404,'User not found','NOT_FOUND');return u}
+export async function update(id:number,input:any){return prisma.user.update({where:{id},data:{name:input.name}})}
