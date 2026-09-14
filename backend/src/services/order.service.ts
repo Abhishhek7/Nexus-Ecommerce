@@ -169,6 +169,7 @@ export async function createOrder(customerId: number, input: {
 
 export async function listOrders(user: { id: number; role: string }, q: {
   page?: number; limit?: number; status?: OrderStatus; search?: string; date?: string;
+  minAmount?: number; maxAmount?: number;
 }) {
   const page = Number(q.page ?? 1);
   const limit = Number(q.limit ?? 20);
@@ -184,6 +185,12 @@ export async function listOrders(user: { id: number; role: string }, q: {
     const start = new Date(`${q.date}T00:00:00.000`);
     const end = new Date(`${q.date}T23:59:59.999`);
     where.createdAt = { gte: start, lte: end };
+  }
+  if (q.minAmount !== undefined || q.maxAmount !== undefined) {
+    where.totalAmount = {
+      ...(q.minAmount !== undefined ? { gte: q.minAmount } : {}),
+      ...(q.maxAmount !== undefined ? { lte: q.maxAmount } : {}),
+    };
   }
 
   const [data, total] = await prisma.$transaction([
